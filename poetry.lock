@@ -1184,6 +1184,23 @@ watchdog = {version = ">=2.1.5", markers = "platform_system != \"Darwin\""}
 snowflake = ["snowflake-connector-python (>=2.8.0)", "snowflake-snowpark-python (>=0.9.0)"]
 
 [[package]]
+name = "streamlit-activities-menu"
+version = "0.1.4"
+description = ""
+optional = false
+python-versions = ">=3.9, !=2.7.*, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, !=3.6.*, !=3.7.*, !=3.8.*"
+files = [
+    {file = "streamlit_activities_menu-0.1.4-py3-none-any.whl", hash = "sha256:1bc565f0274b334a07849f763e327b11b698a091da03961b74c0017c7a6dd0be"},
+    {file = "streamlit_activities_menu-0.1.4.tar.gz", hash = "sha256:aa52f4bda7b6125536181e9a27fc8e20469251f7461b819c8e869871ce34536a"},
+]
+
+[package.dependencies]
+mkdocs = ">=1.5.3,<2.0.0"
+pytest = ">=7.4.3,<8.0.0"
+pyyaml = ">=6.0.1,<7.0.0"
+streamlit = ">=1.18,<2.0"
+
+[[package]]
 name = "tenacity"
 version = "8.3.0"
 description = "Retry code until it succeeds"
@@ -1323,4 +1340,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11.8"
-content-hash = "bcda042361e6ae6fce0c3d5c2cc7d0116fe1bc33d168bfde0d425899a7b0a047"
+content-hash = "3473521e5b3cbad5f1c2270eceb51074fb2c4761e2ecb6c0a00c961233ec1efc"
