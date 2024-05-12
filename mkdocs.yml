@@ -1,1 +1,13 @@
 site_name: SITES Spectral Thematic Center (SSTC) - Fixed Sensors
+
+theme:
+  name: 'rtd-dropdown'
+
+plugins:
+  - search
+  - mkdocstrings
+  - include-markdown
+
+markdown_extensions:
+  - toc:
+      permalink: true
