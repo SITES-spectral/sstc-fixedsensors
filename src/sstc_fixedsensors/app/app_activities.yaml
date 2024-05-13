@@ -1,20 +1,10 @@
 # Activities for multipage streamlit app
 - 
-  name: 'Calibrations quick-checks'
-  description: "Calibrations quickcheck"
-  url: "calibrations_quickcheck.py"
-
--
-  name: 'Main'
-  description: 'Main Dashboard'
-  url: "main.py"
-
--
-  name: 'Map'
-  description: 'Map overview'
-  url: "map.py"
+  name: 'CALIBRATION checks'
+  description: "Calibrations sanity checks"
+  url: "calibrations_checks.py"
 
 - 
-  name: 'Data processing'
+  name: 'DATA PROCESSING'
   description: 'Data Processing'
   url: "data_processing.py"

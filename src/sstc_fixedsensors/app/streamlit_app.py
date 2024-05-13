@@ -39,7 +39,8 @@ def run():
             disabled=False
             )
 
-
+    st.sidebar.divider()
+    
 if __name__ == '__main__':
     run()
 else:
