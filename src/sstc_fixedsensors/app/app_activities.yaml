@@ -1,6 +1,6 @@
 # Activities for multipage streamlit app
 - 
-  name: 'Calibrations quickcheck'
+  name: 'Calibrations quick-checks'
   description: "Calibrations quickcheck"
   url: "calibrations_quickcheck.py"
 
