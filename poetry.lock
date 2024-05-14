@@ -44,6 +44,31 @@ tests-mypy = ["mypy (>=1.6)", "pytest-mypy-plugins"]
 tests-no-zope = ["attrs[tests-mypy]", "cloudpickle", "hypothesis", "pympler", "pytest (>=4.3.0)", "pytest-xdist[psutil]"]
 
 [[package]]
+name = "bgsio"
+version = "0.1.4"
+description = "Be GeoSpatial public IO python tools"
+optional = false
+python-versions = ">=3.11,<4.0"
+files = [
+    {file = "bgsio-0.1.4-py3-none-any.whl", hash = "sha256:c2fa48984f31218ee117c41a0c5c8737d1574fbcff4faff68f54cb5f5b65f399"},
+    {file = "bgsio-0.1.4.tar.gz", hash = "sha256:ce479af56863e5541ddf3243f90025316b00ad7419510ef2144aaa4bc345f871"},
+]
+
+[package.dependencies]
+bgsutils = ">=0.1.2,<0.2.0"
+PyYAML = ">=6.0.1,<7.0.0"
+
+[[package]]
+name = "bgsutils"
+version = "0.1.2"
+description = "Be GeoSpatial public utils python tools"
+optional = false
+python-versions = ">=3.11,<4.0"
+files = [
+    {file = "bgsutils-0.1.2-py3-none-any.whl", hash = "sha256:01c2eb2a055420aecb3914eb28bd398087686cc22a07395a4f4b0103a3d2a8bd"},
+]
+
+[[package]]
 name = "blinker"
 version = "1.8.2"
 description = "Fast, simple object-to-object and broadcast signaling"
@@ -1149,22 +1174,6 @@ files = [
 ]
 
 [[package]]
-name = "sstc-schemas"
-version = "0.1.1"
-description = ""
-optional = false
-python-versions = "<4.0.0,>=3.11.8"
-files = [
-    {file = "sstc_schemas-0.1.1-py3-none-any.whl", hash = "sha256:230b0493900e9fb1b3c98637695d0397979e45d9639ab8b06cc4c56edc69f67f"},
-    {file = "sstc_schemas-0.1.1.tar.gz", hash = "sha256:350cdbd7da2e3df6e27809a314913067a574d793dc2154d47218c0fbcc4b1e20"},
-]
-
-[package.dependencies]
-mkdocs = ">=1.5.3,<2.0.0"
-pytest = ">=7.4.3,<8.0.0"
-pyyaml = ">=6.0.1,<7.0.0"
-
-[[package]]
 name = "streamlit"
 version = "1.34.0"
 description = "A faster way to build and share data apps"
@@ -1356,4 +1365,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11.8"
-content-hash = "b1bc64194359668ddd35aec7346da470621635520f012a8394c382abe932f810"
+content-hash = "b9da10f47f5b218d7978e2c80eb9c920c44ae7a88359fc457e129df2f7a0ca97"

@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from streamlit_activities_menu import build_activities_menu, get_available_activities
-from sstc_schemas.schemas import sites_acronyms
+
 
 st.set_page_config(
     layout='wide',
@@ -12,7 +12,10 @@ st.set_page_config(
 
 
 def run():
-    working_directory = os.path.dirname(os.path.abspath(__file__))    
+    
+    working_directory = os.path.dirname(os.path.abspath(__file__))
+    if 'working_directory' not in st.session_state:
+        st.session_state['working_directory'] = working_directory    
 
     LOGO_SIDEBAR_URL = "https://github.com/SITES-spectral/sstc-assets/blob/main/src/sstc_assets/logos/SITES_spectral_LOGO.png?raw=true"
 
@@ -20,8 +23,6 @@ def run():
             LOGO_SIDEBAR_URL,             
             caption= 'Swedish Infrastructure for Ecosystem Science (SITES) Spectral'
             )
-        
- 
         
     # Load the available services
     ACTIVITIES_FILEPATH = os.path.join(working_directory, "app_activities.yaml")
