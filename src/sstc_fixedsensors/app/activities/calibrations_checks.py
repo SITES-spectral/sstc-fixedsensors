@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from io import StringIO
+from calval import calibration
 
 # Decagon
 # Skye sensors
@@ -55,7 +55,10 @@ with col2:
     uploaded_file = st.file_uploader(
         label="Choose a calibration file:",
         type=["dat", "csv", "txt", "tsv"])
-    
+
+# ----
+confirm_btn = False
+
 if uploaded_file is not None:
 
     if 'delete_rows' not in st.session_state:
@@ -67,12 +70,9 @@ if uploaded_file is not None:
         with dc1:
             delete_rows = st.multiselect(
             label='extra headers rows to **delete**:',
-            options=[0,1,2,3,4],
+            options=[0,1,2],
             )
-
-                        
         with dc2:
-            
             df = sstc_read_csv(
                 uploaded_file,
                 header=1, 
@@ -89,33 +89,29 @@ if uploaded_file is not None:
                     df[timestamp_col] = pd.to_datetime(df['TIMESTAMP'])
                     #if df['timestamp_col'].loc[0] is not None:
                     st.success('`TIMESTAMP` recognized. Ensure no extra rows as headers affecting other values. Remove rows if necesary.')
-                    
                 except:
                     st.error('`TIMESTAMP` cannot be processed. Delete extra headers affecting values.')
-                
-                                   
-                
             else:
                 st.warning('`TIMESTAMP` column not found')
 
-                            
+            do_not_include_columns = [
+                'TIMESTAMP', 
+                'RECORD',
+                'BattV_Min',
+                'PTemp_C_Avg',
+                'Temp_Avg',
+                'Temp',
+                'PTemp',
+                ]
+        
+            all_channels = [c for c in columns if c not in do_not_include_columns]
 
-            """
-
-        with dc1:
-            if timestamp_col is not None and len(timestamp_col) >0:
-                timestamp = st.selectbox(
-                    '`TIMESTAMP` column selected',
-                    options= ['TIMESTAMP']                    
-                    )
-            else:
-                pass
-                #timestamp = st.selectbox(
-                #    'Choose `TIMESTAMP` column:',
-                #    options= columns
-                #)
-            """    
-
+            # split the column names and select the first item in the list which is expected to be `Up` or `Dw`.
+            up_channels = pd.DataFrame.from_dict({'Up': [u for u in all_channels if u.split(sep='_')[0] in ['Up', 'up'] ]})
+            down_channels = pd.DataFrame.from_dict({'Down': [d for d in all_channels if  d.split(sep='_')[0] in ['Dw', 'dw'] ]})
+            
+            matched_channels = pd.concat([up_channels, down_channels], axis=1)
+            
             
             confirm_btn =  dc1.button('confirm')
 
@@ -123,6 +119,19 @@ if uploaded_file is not None:
                 st.session_state['confirm_source_data'] = True
             else:
                 st.session_state['confirm_source_data'] = False
-                
+
+# ---
+if confirm_btn and matched_channels is not None:
+    
+
+    channels_df =  st.data_editor(
+        matched_channels, 
+        num_rows='fixed',
+        column_config={'Down': st.column_config.SelectboxColumn('Down', required=True, options=matched_channels['Down'])}
+        )
+
+    st.write(channels_df.to_dict())
+    
 
 
+    

@@ -1,6 +1,7 @@
 import os
 import streamlit as st
 from streamlit_activities_menu import build_activities_menu, get_available_activities
+from sstc_schemas.schemas import sites_acronyms
 
 st.set_page_config(
     layout='wide',
