@@ -2,6 +2,25 @@ import streamlit as st
 import pandas as pd
 from io import StringIO
 
+# Decagon
+# Skye sensors
+"""
+    General naming convention: Up_Wavelength, Dw_Wavelength
+    
+    For example (Decagon Sensors):
+    ------------------------------
+        
+    Up_630, Dw_630  ==> Red Channel
+    Up_800, Dw_800  ==> NIR Channel
+    
+    If there are multiple sensor pairs, the column name must be:
+    
+    Up_630_1, Dw_630_1  ==> Red Channel
+    Up_800_1, Dw_800_1  ==> NIR Channel 
+"""
+
+
+
 
 def sstc_read_csv(uploaded_file, header= 1,  delete_rows=[]):
  
@@ -53,20 +72,57 @@ if uploaded_file is not None:
 
                         
         with dc2:
+            
             df = sstc_read_csv(
                 uploaded_file,
                 header=1, 
                 delete_rows=delete_rows)
             
-            
+            columns = list(df.columns)
             st.write(df)
 
-        confirm_btn =  dc1.button('confirm')
+        with dc1:
+            timestamp_col = None
+            if 'TIMESTAMP' in columns:
+                try:                        
+                    timestamp_col = 'TIMESTAMP'
+                    df[timestamp_col] = pd.to_datetime(df['TIMESTAMP'])
+                    #if df['timestamp_col'].loc[0] is not None:
+                    st.success('`TIMESTAMP` recognized. Ensure no extra rows as headers affecting other values. Remove rows if necesary.')
+                    
+                except:
+                    st.error('`TIMESTAMP` cannot be processed. Delete extra headers affecting values.')
+                
+                                   
+                
+            else:
+                st.warning('`TIMESTAMP` column not found')
 
-        if confirm_btn:
-            st.session_state['confirm_source_data'] = True
-        else:
-            st.session_state['confirm_source_data'] = False
+                            
+
+            """
+
+        with dc1:
+            if timestamp_col is not None and len(timestamp_col) >0:
+                timestamp = st.selectbox(
+                    '`TIMESTAMP` column selected',
+                    options= ['TIMESTAMP']                    
+                    )
+            else:
+                pass
+                #timestamp = st.selectbox(
+                #    'Choose `TIMESTAMP` column:',
+                #    options= columns
+                #)
+            """    
+
             
+            confirm_btn =  dc1.button('confirm')
+
+            if confirm_btn:
+                st.session_state['confirm_source_data'] = True
+            else:
+                st.session_state['confirm_source_data'] = False
+                
 
 
