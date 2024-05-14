@@ -14,9 +14,6 @@ st.set_page_config(
 def run():
     
     working_directory = os.path.dirname(os.path.abspath(__file__))
-    if 'working_directory' not in st.session_state:
-        st.session_state['working_directory'] = working_directory    
-
     LOGO_SIDEBAR_URL = "https://github.com/SITES-spectral/sstc-assets/blob/main/src/sstc_assets/logos/SITES_spectral_LOGO.png?raw=true"
 
     if LOGO_SIDEBAR_URL: st.sidebar.image(

@@ -3,6 +3,7 @@ import pandas as pd
 from calval import calibration
 from schemas import SITES
 import os
+import requests
 
 # Decagon
 # Skye sensors
@@ -20,13 +21,20 @@ import os
     Up_630_1, Dw_630_1  ==> Red Channel
     Up_800_1, Dw_800_1  ==> NIR Channel 
 """
+def fetch_markdown_instructions_from_github():
+    
+    url = "https://raw.githubusercontent.com/SITES-spectral/sstc-fixedsensors/main/src/sstc_fixedsensors/app/instructions.md"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.text
+    else:
+        return None
+
 
 @st.cache_data()
 def load_instructions():
-    working_directory = st.session_state.get('working_directory', None)
-    with open(os.path.join(working_directory, "instructions.md"), 'r') as markdown_file:
-        markdown_text = markdown_file.read()
-    st.markdown(markdown_text)
+    instructions_md = fetch_markdown_instructions_from_github()
+    st.markdown(instructions_md)
     
 
 def initialize()-> dict:
@@ -47,13 +55,7 @@ def station_selectbox()->str:
     return station
 
 def sstc_read_csv(uploaded_file, header= 1,  delete_rows=[]): 
-    data = pd.read_csv(
-        uploaded_file, 
-        delimiter=',',
-        decimal='.',
-        header=header,
-        encoding='utf-8',        
-        )
+
     
     _to_delete = []
 
@@ -69,107 +71,181 @@ def sstc_read_csv(uploaded_file, header= 1,  delete_rows=[]):
 def show_instructions_dialog():
     load_instructions()
 
+"""
+@st.cache_data(experimental_allow_widgets=True)
+def load_calibration_file_as_dataframe(
+    delimiter=',',
+    decimal='.',
+    header=1,
+    encoding='utf-8'
+    ):
+"""
+    
+
+@st.experimental_dialog('calibration dataset')
+def show_raw_calibration(raw_calibration_df:pd.DataFrame):
+    if raw_calibration_df is not None:
+        st.write(raw_calibration_df)
 
 def run():
     initialize()
 
-    instructions_col1, header_col2, header_col3 = st.columns([2,1,1])
-
+    _, instructions_col1, header_stations_col = st.columns([3,1,1], gap='small')
+    station = None
     with instructions_col1:
-        if st.button('Instructions'):
-            show_instructions_dialog()
-
-
-    with header_col3:
-        station = station_selectbox()
-    st.divider()
-        
-
-    col1, col2 = st.columns([1,1])
-
-    with col1:
-        pass
-    with col2:
-        uploaded_file = st.file_uploader(
-            label="Choose a calibration file:",
-            type=["dat", "csv", "txt", "tsv"])
-
-    # ----
-    confirm_btn = False
-
-    if uploaded_file is not None:
-
-        if 'delete_rows' not in st.session_state:
-            st.session_state['delete_rows'] = []
-        
-
-        with st.expander('Calibration source data', expanded=True):
-            dc1, dc2 = st.columns([1,3])
-            with dc1:
-                delete_rows = st.multiselect(
-                label='extra headers rows to **delete**:',
-                options=[0,1,2],
-                )
-            with dc2:
-                df = sstc_read_csv(
-                    uploaded_file,
-                    header=1, 
-                    delete_rows=delete_rows)
+        with st.container(border=True):
+            if st.button('Instructions'):
+                show_instructions_dialog()
                 
-                columns = list(df.columns)
-                st.write(df)
+        with header_stations_col:
+            station = station_selectbox()
 
-            with dc1:
-                timestamp_col = None
+    with st.expander('**Step 01**: Load calibration dataset', expanded=True):
+        step01_col1, step01_col2 = st.columns([2,1])
+
+        with step01_col1:
+            uploaded_file = st.file_uploader(
+                label="Choose a calibration file:",
+                type=["dat", "csv", "txt", "tsv"])
+            
+            if uploaded_file is not None:
+                calibration_df = pd.read_csv(
+                    uploaded_file, 
+                    delimiter=',',
+                    decimal='.',
+                    header=1,
+                    encoding='utf-8',        
+                    )
+                
+            else:
+                calibration_df = None
+
+    if 'calibration_df' not in st.session_state:
+        st.session_state['calibration_df'] = None
+
+    if calibration_df is not None:
+        st.session_state['calibration_df'] = calibration_df
+    
+
+    if st.session_state['calibration_df'] is not None:
+            
+        with st.expander('**STEP 02**: dataprep'):
+            cal_df = st.session_state['calibration_df']
+            columns = list(cal_df.columns)
+            timestamp_col = None
+            if 'delete_rows' not in st.session_state:
+                st.session_state['delete_rows'] = []
+
+            message = st.empty()
+            
+
+            # ---
+
+            step02_col1, step02_col2 = st.columns([1,2], gap='small')
+
+            with step02_col1:
+                delete_rows = st.multiselect(
+                    label='**delete** row number:',
+                    options=[0,1],
+                    )
+                st.session_state['delete_rows']= delete_rows
+
+            with step02_col2:
+                cal_df = cal_df.drop(st.session_state['delete_rows'], axis=0)
                 if 'TIMESTAMP' in columns:
                     try:                        
                         timestamp_col = 'TIMESTAMP'
-                        df[timestamp_col] = pd.to_datetime(df['TIMESTAMP'])
-                        #if df['timestamp_col'].loc[0] is not None:
-                        st.success('`TIMESTAMP` recognized. Ensure no extra rows as headers affecting other values. Remove rows if necesary.')
+                        cal_df[timestamp_col] = pd.to_datetime(
+                            cal_df['TIMESTAMP'],
+                            format='%Y-%m-%d %H:%M:%S'
+                            )                
+                        
+                        none_indices = [int(i) for i in  cal_df.loc[cal_df[timestamp_col].isna()].index]
+                        
+                        if len(none_indices) >0:
+                            message.warning(f'Please remove the rows where `TIMESTAMP` is empty: rows {none_indices}')
+                        else:
+                            message.success('`TIMESTAMP` recognized. Continue to **STEP 03**')
+                            st.balloons()
+
                     except:
-                        st.error('`TIMESTAMP` cannot be processed. Delete extra headers affecting values.')
+                        message.error('`TIMESTAMP` cannot be processed. Delete extra rows affecting data values.')
                 else:
-                    st.warning('`TIMESTAMP` column not found')
-
-                do_not_include_columns = [
-                    'TIMESTAMP', 
-                    'RECORD',
-                    'BattV_Min',
-                    'PTemp_C_Avg',
-                    'Temp_Avg',
-                    'Temp',
-                    'PTemp',
-                    ]
+                    message.warning('`TIMESTAMP` column not found')
             
-                all_channels = [c for c in columns if c not in do_not_include_columns]
+                st.session_state['cal_df'] = cal_df
+                st.dataframe(cal_df)
+        with st.expander('**STEP 03**: Revise channels pairs and center wavelengths for each channel'):
+            do_not_include_columns = [
+                'TIMESTAMP', 
+                'RECORD',
+                'BattV_Min',
+                'PTemp_C_Avg',
+                'Temp_Avg',
+                'Temp',
+                'PTemp',
+                ]
+            
+            
+        
+            all_channels = [c for c in columns if c not in do_not_include_columns]
 
-                # split the column names and select the first item in the list which is expected to be `Up` or `Dw`.
-                up_channels = pd.DataFrame.from_dict({'Up': [u for u in all_channels if u.split(sep='_')[0] in ['Up', 'up'] ]})
-                down_channels = pd.DataFrame.from_dict({'Down': [d for d in all_channels if  d.split(sep='_')[0] in ['Dw', 'dw'] ]})
+            # split the column names and select the first item in the list which is expected to be `Up` or `Dw`.
+            up_channels = pd.DataFrame.from_dict({
+                'Up': [u for u in all_channels if u.split(sep='_')[0] in ['Up', 'up'] ]})
+          
+            down_channels = pd.DataFrame.from_dict({'Down': [d for d in all_channels if  d.split(sep='_')[0] in ['Dw', 'dw'] ]})
+           
+            matched_channels = pd.concat([up_channels, down_channels], axis=1)
+            matched_channels['sensor_sites_named'] = None
+            matched_channels['sensor_model'] = None
+            
+            matched_channels['center_wavelength_nm'] = None
+            matched_channels['mast_height_m'] = None
+            matched_channels['is_validated'] = False
+            if matched_channels is not None:
+                sensor_brands = {'Skye': {'center_wavelengths_nm': [469, 530, 531, 532, 552, 570, 640, 644, 645, 650, 704, 740, 810, 856, 858, 860, 1636, 1640]}, 
+                                 'Decagon': {'center_wavelengths_nm': [531, 532, 570, 830, 650, 800, 810]}}
+                center_wavelengths_nm = [469, 530, 531, 532, 552, 570, 640, 644, 645, 650, 704, 740, 800, 810, 830, 856, 858, 860, 1636, 1640]
+                    
+                channels_df =  st.data_editor(
+                    matched_channels, 
+                    num_rows='fixed',
+                    column_config={
+                        'Down': st.column_config.SelectboxColumn('Down', required=True, options=matched_channels['Down']),
+                        'sensor_model': st.column_config.SelectboxColumn('sensor_model', required=True, options=sensor_brands.keys()),
+                        'center_wavelength_nm': st.column_config.SelectboxColumn('center_wavelength_nm', required=True, options=center_wavelengths_nm),
+                        'sensor_sites_named': st.column_config.TextColumn('sensor_sites_named'),
+                        'mast_height_m': st.column_config.NumberColumn('mast_height_m', min_value = 1.0, max_value=150.0, step=1.0)
+                        }
+                    )
                 
-                matched_channels = pd.concat([up_channels, down_channels], axis=1)
-                
-                
-                confirm_btn =  dc1.button('confirm')
 
-                if confirm_btn:
-                    st.session_state['confirm_source_data'] = True
-                else:
-                    st.session_state['confirm_source_data'] = False
+                
+        
+
+
+    
+    """
+
+            
+            
+            
+            confirm_btn =  dc1.button('confirm')
+
+            if confirm_btn:
+                st.session_state['confirm_source_data'] = True
+            else:
+                st.session_state['confirm_source_data'] = False
 
     # ---
     if confirm_btn and matched_channels is not None:
         
 
-        channels_df =  st.data_editor(
-            matched_channels, 
-            num_rows='fixed',
-            column_config={'Down': st.column_config.SelectboxColumn('Down', required=True, options=matched_channels['Down'])}
-            )
+        
 
         st.write(channels_df.to_dict())
-        
+        """
 
 
         
