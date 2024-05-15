@@ -360,7 +360,32 @@ def run():
                 #speed=6
 
                 # Perform calibration
+                if 'calibration_results' not in st.session_state:
+                    st.session_state.calibration_results = {}
+                    
+                #if st.checkbox('use previous calibration', value=False):
+                #    XX = st.session_state.calibration_results.XX
+                #    YY = st.session_state.calibration_results.YY
+                #    up_channel_calibrated = st.session_state.calibration_results.up_channel_calibrated
+                #    dw_channel_calibrated = st.session_state.calibration_results.dw_channel_calibrated
+                #    yfit = st.session_state.calibration_results.yfit
+                    
+                #else:
                 XX, YY, up_channel_calibrated, dw_channel_calibrated, yfit = calibration(up_channel, dw_channel)
+                st.session_state.calibration_results = {
+                    'XX': XX,
+                    'YY': YY,
+                    'up_channel_calibrated': up_channel_calibrated,
+                    'dw_channel_calibrated': dw_channel_calibrated,
+                    'yfit': yfit
+                    }
+    
+                        
+                                
+                        
+
+
+                
 
                 # Plot using Streamlit
                 st.line_chart(pd.DataFrame({'XX': XX, 'YY': YY, 'up_channel_calibrated': up_channel_calibrated, 
