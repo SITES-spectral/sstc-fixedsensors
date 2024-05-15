@@ -1,9 +1,11 @@
 import streamlit as st
 import pandas as pd
-from calval import calibration
+
 from schemas import SITES
-import os
 import requests
+
+import numpy as np
+from scipy.optimize import curve_fit
 
 # Decagon
 # Skye sensors
@@ -21,6 +23,56 @@ import requests
     Up_630_1, Dw_630_1  ==> Red Channel
     Up_800_1, Dw_800_1  ==> NIR Channel 
 """
+
+def linear_fit(x, a, b):
+    return a * x + b
+
+def calibration(
+        up_channel: pd.Series, 
+        dw_channel:pd.Series, 
+        standard=1, 
+        Threshold=0.03, 
+        Iter=100, 
+        speed=6):
+    
+    if len(up_channel) != len(dw_channel):
+        print('Must be two equal length arrays')
+        return
+    
+    dw_channel = dw_channel / standard
+    XX, YY = up_channel.copy(), dw_channel.copy()
+
+    popt, _ = curve_fit(linear_fit, up_channel, dw_channel)
+    yfit = linear_fit(up_channel, *popt)
+    ME = np.abs((yfit - dw_channel) / yfit)
+    MaxME = np.max(ME)
+    counter = 0
+    
+    while MaxME > Threshold:
+        Ind = np.where(ME > speed * Threshold)[0]
+        up_channel = np.delete(up_channel, Ind)
+        dw_channel = np.delete(dw_channel, Ind)
+        
+        popt, _ = curve_fit(linear_fit, up_channel, dw_channel)
+        yfit = linear_fit(up_channel, *popt)
+        ME = np.abs(yfit - dw_channel) / np.mean(yfit)
+        MaxME = np.max(ME)
+        speed -= 1
+        if speed < 1:
+            speed = 1
+        counter += 1
+        print('Iteration {}, Wait...'.format(counter))
+        if counter > Iter:
+            print('Reach maximum iteration!')
+            return
+    
+    print('Samples left {}.'.format(len(up_channel)))
+    
+    # Return the necessary data for plotting
+    return XX, YY, up_channel, dw_channel, yfit
+
+
+
 def fetch_markdown_instructions_from_github():
     
     url = "https://raw.githubusercontent.com/SITES-spectral/sstc-fixedsensors/main/src/sstc_fixedsensors/app/instructions.md"
@@ -54,32 +106,10 @@ def station_selectbox()->str:
     st.session_state['station'] = station
     return station
 
-def sstc_read_csv(uploaded_file, header= 1,  delete_rows=[]): 
-
-    
-    _to_delete = []
-
-    for i in data.index:
-        if int(i) in delete_rows:
-            _to_delete.append(i)
-    
-    data.drop(_to_delete, inplace=True)
-
-    return data
 
 @st.experimental_dialog('Instructions')
 def show_instructions_dialog():
     load_instructions()
-
-"""
-@st.cache_data(experimental_allow_widgets=True)
-def load_calibration_file_as_dataframe(
-    delimiter=',',
-    decimal='.',
-    header=1,
-    encoding='utf-8'
-    ):
-"""
     
 
 @st.experimental_dialog('calibration dataset')
@@ -209,7 +239,8 @@ def run():
                 center_wavelengths_nm = [469, 530, 531, 532, 552, 570, 640, 644, 645, 650, 704, 740, 800, 810, 830, 856, 858, 860, 1636, 1640]
                     
                 channels_df =  st.data_editor(
-                    matched_channels, 
+                    key='matched_channels_data_editor',
+                    data=matched_channels, 
                     num_rows='fixed',
                     column_config={
                         'Down': st.column_config.SelectboxColumn('Down', required=True, options=matched_channels['Down']),
@@ -219,6 +250,33 @@ def run():
                         'mast_height_m': st.column_config.NumberColumn('mast_height_m', min_value = 1.0, max_value=150.0, step=1.0)
                         }
                     )
+
+                up_channel = cal_df[ channels_df.loc[0, 'Up']].astype(float)  #.apply(lambda x: float(x))
+                dw_channel = cal_df[channels_df.loc[0, 'Down']].astype(float)  #.apply(lambda x: float(x))
+
+                
+
+                if len(up_channel) != len(dw_channel):
+                    st.error('`up_channel` and `down_channel` must have equal lengths')
+                    st.stop()
+                else:
+                    #standard=1, 
+                    #Threshold=0.03, 
+                    #Iter=100, 
+                    #speed=6
+
+                    # Perform calibration
+                    XX, YY, up_channel_calibrated, dw_channel_calibrated, yfit = calibration(up_channel, dw_channel)
+
+                    # Plot using Streamlit
+                    st.line_chart(pd.DataFrame({'XX': XX, 'YY': YY, 'up_channel_calibrated': up_channel_calibrated, 
+                                            'dw_channel_calibrated': dw_channel_calibrated, 'yfit': yfit}))
+
+
+                    
+
+                
+            
                 
 
                 

@@ -1,59 +1,64 @@
 import numpy as np
 from scipy.optimize import curve_fit
 import matplotlib.pyplot as plt
+import pandas as pd
 
 
+def linear_fit(x, a, b):
+    return a * x + b
 
-def calibration(IN, OUT, standard=1, Threshold=0.03, Iter=100, speed=6):
-    if IN.ndim != 1 or OUT.ndim != 1:
-        print('NOT work on matrix data!')
-        return
+def calibration(
+        up_channel: pd.Series, 
+        dw_channel:pd.Series, 
+        standard=1, 
+        Threshold=0.03, 
+        Iter=100, 
+        speed=6):
     
-    if len(IN) != len(OUT):
+    if len(up_channel) != len(dw_channel):
         print('Must be two equal length arrays')
         return
     
-    OUT = OUT / standard
-    XX, YY = IN.copy(), OUT.copy()
+    dw_channel = dw_channel / standard
+    XX, YY = up_channel.copy(), dw_channel.copy()
+
     
-    def linear_fit(x, a, b):
-        return a * x + b
-    
-    popt, _ = curve_fit(linear_fit, IN, OUT)
-    yfit = linear_fit(IN, *popt)
-    ME = np.abs((yfit - OUT) / yfit)
+    popt, _ = curve_fit(linear_fit, up_channel, dw_channel)
+    yfit = linear_fit(up_channel, *popt)
+    ME = np.abs((yfit - dw_channel) / yfit)
     MaxME = np.max(ME)
     counter = 0
     
     while MaxME > Threshold:
         plt.figure(1)
-        plt.plot(IN, OUT, 'o', markersize=4)
+        plt.plot(up_channel, dw_channel, 'o', markersize=4)
         plt.draw()
         plt.pause(0.5)
         
         Ind = np.where(ME > speed * Threshold)[0]
-        IN = np.delete(IN, Ind)
-        OUT = np.delete(OUT, Ind)
+        up_channel = np.delete(up_channel, Ind)
+        dw_channel = np.delete(dw_channel, Ind)
         
-        popt, _ = curve_fit(linear_fit, IN, OUT)
-        yfit = linear_fit(IN, *popt)
-        ME = np.abs(yfit - OUT) / np.mean(yfit)
+        popt, _ = curve_fit(linear_fit, up_channel, dw_channel)
+        yfit = linear_fit(up_channel, *popt)
+        ME = np.abs(yfit - dw_channel) / np.mean(yfit)
         MaxME = np.max(ME)
         speed -= 1
         if speed < 1:
             speed = 1
         counter += 1
         print('Iteration {}, Wait...'.format(counter))
-        if counter > 100:
+        if counter > Iter:
             print('Reach maximum iteration!')
             return
     
-    print('Samples left {}.'.format(len(IN)))
+    print('Samples left {}.'.format(len(up_channel)))
     plt.figure(1)
     plt.plot(XX, YY, 'o', color=[0.7, 0.7, 0.7], markersize=4)
-    plt.plot(IN, OUT, 'o', markersize=4)
-    plt.plot(IN, yfit, 'r-')
+    plt.plot(up_channel, dw_channel, 'o', markersize=4)
+    plt.plot(up_channel, yfit, 'r-')
     plt.xlabel('In (mV)')
     plt.ylabel('Out (mV)')
     plt.show()
+    
     return linear_fit
