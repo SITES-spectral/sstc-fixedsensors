@@ -1,10 +1,10 @@
 # Activities for multipage streamlit app
 - 
-  name: 'CALIBRATION checks'
-  description: "Calibrations sanity checks"
-  url: "calibrations_checks.py"
+  name: 'post-calibration'
+  description: "Post-calibrations sanity checks"
+  url: "ui_post_calibration.py"
 
-- 
-  name: 'DATA PROCESSING'
-  description: 'Data Processing'
-  url: "data_processing.py"
+#- 
+#  name: 'data processing'
+#  description: 'Data Processing'
+#  url: "ui_data_processing.py"

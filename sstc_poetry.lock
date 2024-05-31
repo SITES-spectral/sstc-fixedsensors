@@ -275,20 +275,6 @@ doc = ["sphinx (==4.3.2)", "sphinx-autodoc-typehints", "sphinx-rtd-theme", "sphi
 test = ["coverage[toml]", "ddt (>=1.1.1,!=1.4.3)", "mock", "mypy", "pre-commit", "pytest (>=7.3.1)", "pytest-cov", "pytest-instafail", "pytest-mock", "pytest-sugar", "typing-extensions"]
 
 [[package]]
-name = "griffe"
-version = "0.45.1"
-description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "griffe-0.45.1-py3-none-any.whl", hash = "sha256:12194c10ae07a7f46708741ad78419362cf8e5c883f449c7c48de1686611b853"},
-    {file = "griffe-0.45.1.tar.gz", hash = "sha256:84ce9243a9e63c07d55563a735a0d07ef70b46c455616c174010e7fc816f4648"},
-]
-
-[package.dependencies]
-colorama = ">=0.4"
-
-[[package]]
 name = "idna"
 version = "3.7"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -523,22 +509,6 @@ i18n = ["babel (>=2.9.0)"]
 min-versions = ["babel (==2.9.0)", "click (==7.0)", "colorama (==0.4)", "ghp-import (==1.0)", "importlib-metadata (==4.4)", "jinja2 (==2.11.1)", "markdown (==3.3.6)", "markupsafe (==2.0.1)", "mergedeep (==1.3.4)", "mkdocs-get-deps (==0.2.0)", "packaging (==20.5)", "pathspec (==0.11.1)", "pyyaml (==5.1)", "pyyaml-env-tag (==0.1)", "watchdog (==2.0)"]
 
 [[package]]
-name = "mkdocs-autorefs"
-version = "1.0.1"
-description = "Automatically link across pages in MkDocs."
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "mkdocs_autorefs-1.0.1-py3-none-any.whl", hash = "sha256:aacdfae1ab197780fb7a2dac92ad8a3d8f7ca8049a9cbe56a4218cd52e8da570"},
-    {file = "mkdocs_autorefs-1.0.1.tar.gz", hash = "sha256:f684edf847eced40b570b57846b15f0bf57fb93ac2c510450775dcf16accb971"},
-]
-
-[package.dependencies]
-Markdown = ">=3.3"
-markupsafe = ">=2.0.1"
-mkdocs = ">=1.1"
-
-[[package]]
 name = "mkdocs-get-deps"
 version = "0.2.0"
 description = "MkDocs extension that lists all dependencies according to a mkdocs.yml file"
@@ -553,61 +523,6 @@ files = [
 mergedeep = ">=1.3.4"
 platformdirs = ">=2.2.0"
 pyyaml = ">=5.1"
-
-[[package]]
-name = "mkdocs-rtd-dropdown"
-version = "1.0.2"
-description = "Clone of ReadTheDocs"
-optional = false
-python-versions = "*"
-files = [
-    {file = "mkdocs-rtd-dropdown-1.0.2.tar.gz", hash = "sha256:183f2f2cd7b9305addb031a1d526e933102d319de48ee3fcafb960b3ed7ee491"},
-    {file = "mkdocs_rtd_dropdown-1.0.2-py2-none-any.whl", hash = "sha256:72d83d4a8a7f534e4f193b2cdeeb3721fb079213d440fcc2b5b7f1f46af15f15"},
-]
-
-[package.dependencies]
-mkdocs = "*"
-
-[[package]]
-name = "mkdocstrings"
-version = "0.25.1"
-description = "Automatic documentation from sources, for MkDocs."
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "mkdocstrings-0.25.1-py3-none-any.whl", hash = "sha256:da01fcc2670ad61888e8fe5b60afe9fee5781017d67431996832d63e887c2e51"},
-    {file = "mkdocstrings-0.25.1.tar.gz", hash = "sha256:c3a2515f31577f311a9ee58d089e4c51fc6046dbd9e9b4c3de4c3194667fe9bf"},
-]
-
-[package.dependencies]
-click = ">=7.0"
-Jinja2 = ">=2.11.1"
-Markdown = ">=3.3"
-MarkupSafe = ">=1.1"
-mkdocs = ">=1.4"
-mkdocs-autorefs = ">=0.3.1"
-platformdirs = ">=2.2.0"
-pymdown-extensions = ">=6.3"
-
-[package.extras]
-crystal = ["mkdocstrings-crystal (>=0.3.4)"]
-python = ["mkdocstrings-python (>=0.5.2)"]
-python-legacy = ["mkdocstrings-python-legacy (>=0.2.1)"]
-
-[[package]]
-name = "mkdocstrings-python"
-version = "1.10.3"
-description = "A Python handler for mkdocstrings."
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "mkdocstrings_python-1.10.3-py3-none-any.whl", hash = "sha256:11ff6d21d3818fb03af82c3ea6225b1534837e17f790aa5f09626524171f949b"},
-    {file = "mkdocstrings_python-1.10.3.tar.gz", hash = "sha256:321cf9c732907ab2b1fedaafa28765eaa089d89320f35f7206d00ea266889d03"},
-]
-
-[package.dependencies]
-griffe = ">=0.44"
-mkdocstrings = ">=0.25"
 
 [[package]]
 name = "numpy"
@@ -953,43 +868,6 @@ carto = ["pydeck-carto"]
 jupyter = ["ipykernel (>=5.1.2)", "ipython (>=5.8.0)", "ipywidgets (>=7,<8)", "traitlets (>=4.3.2)"]
 
 [[package]]
-name = "pyexiv2"
-version = "2.12.0"
-description = "Read/Write metadata(including EXIF, IPTC, XMP), comment and ICC Profile embedded in digital images."
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "pyexiv2-2.12.0-cp310-none-macosx_12_0_x86_64.whl", hash = "sha256:de6c9825e229ead4c13dd6442e5ea32d7115fd8d909931495bd37e6ef4824567"},
-    {file = "pyexiv2-2.12.0-cp310-none-macosx_13_0_x86_64.whl", hash = "sha256:c1eaf86b24c233b5e282152ea5ddb54f633535cb585910a4b8f9fe3eb7144a39"},
-    {file = "pyexiv2-2.12.0-cp310-none-manylinux2014_x86_64.whl", hash = "sha256:0291905a504577bc535ba14018ff03ec90aeb5393b543b9de3f14d77028cbb37"},
-    {file = "pyexiv2-2.12.0-cp310-none-win_amd64.whl", hash = "sha256:8deaa9ef6772219b51bd6cbfcc1b656665ab3a325cf8b03f4d90cdd50dc8a41b"},
-    {file = "pyexiv2-2.12.0-cp311-none-macosx_12_0_x86_64.whl", hash = "sha256:9b15debab88ae918f7d6bb9f87d60371dc68bd755cd34a6cf92a1a53e685b086"},
-    {file = "pyexiv2-2.12.0-cp311-none-macosx_13_0_x86_64.whl", hash = "sha256:c7122517bcff53a79aa69a2cbb2983c4620d274c497e9cdaf7fc493d7651a0e5"},
-    {file = "pyexiv2-2.12.0-cp311-none-manylinux2014_x86_64.whl", hash = "sha256:040e690721d614e58188d3bcd4090378cf1291671d1ab000df3b29552987748a"},
-    {file = "pyexiv2-2.12.0-cp311-none-win_amd64.whl", hash = "sha256:a35c37bdc1b18b6425f9ad5bad712e220dbedb7ffc2d5449dbb6d112a37d0872"},
-    {file = "pyexiv2-2.12.0-cp312-none-macosx_12_0_x86_64.whl", hash = "sha256:2a58ccf1f4c98899cebe9b1643c8244d0c21389558324a6edcdfb7b1b7d47546"},
-    {file = "pyexiv2-2.12.0-cp312-none-macosx_13_0_x86_64.whl", hash = "sha256:711271b057af43d27626f0e3c6bddf0425c909d7572fa0fbb8cae45696e7a8fb"},
-    {file = "pyexiv2-2.12.0-cp312-none-manylinux2014_x86_64.whl", hash = "sha256:930074e7b6354d01468517746efbcfdf63251de34c5bb95772a6e4b47405d444"},
-    {file = "pyexiv2-2.12.0-cp312-none-win_amd64.whl", hash = "sha256:d5dadd0f883787be1512062ae175925e023771dda7fdd101df8b7a43c45f68e0"},
-    {file = "pyexiv2-2.12.0-cp36-none-macosx_12_0_x86_64.whl", hash = "sha256:5baa2654f0b9b8bc074e63f591b5da2f61bafe1b8c59c3f4481f35d8944a3284"},
-    {file = "pyexiv2-2.12.0-cp36-none-macosx_13_0_x86_64.whl", hash = "sha256:452131631a633f743d69ef76be7ee69770fd7479181408c1a57c3f0df10553fa"},
-    {file = "pyexiv2-2.12.0-cp36-none-manylinux2014_x86_64.whl", hash = "sha256:60f59b3dd689d203d93fd49b0726c3e66af31e63b2d6bd37b0c8d32b128d292b"},
-    {file = "pyexiv2-2.12.0-cp36-none-win_amd64.whl", hash = "sha256:7d74dddc6540af86f4af62f513b1806aeea27f0296655009d3261a7cb80f4549"},
-    {file = "pyexiv2-2.12.0-cp37-none-macosx_12_0_x86_64.whl", hash = "sha256:5023a140fbd26fc644866cb0d5563effab180392b41c2620849eacf860600b3a"},
-    {file = "pyexiv2-2.12.0-cp37-none-macosx_13_0_x86_64.whl", hash = "sha256:694991ef626b9a683e5285f4bf5119bf519122430f6fb4208e1231d6f8ef287a"},
-    {file = "pyexiv2-2.12.0-cp37-none-manylinux2014_x86_64.whl", hash = "sha256:0e067f38cf9379fb416f3231081c6267fa0b439b4ec11d4d0a4a7c162ea4a00c"},
-    {file = "pyexiv2-2.12.0-cp37-none-win_amd64.whl", hash = "sha256:5da85901d7a0f36fcc55c741341b82f4c29b9bdcb643f02e78e9a9edecd1e427"},
-    {file = "pyexiv2-2.12.0-cp38-none-macosx_12_0_x86_64.whl", hash = "sha256:644d9d405cd97419d9b62f887446e26c301ac7ee98aa7e61d53fa7c12ba2305b"},
-    {file = "pyexiv2-2.12.0-cp38-none-macosx_13_0_x86_64.whl", hash = "sha256:45d7f3808dd65211c629886e5688b873bc729ed6d91ef2a9f772ae64111e3332"},
-    {file = "pyexiv2-2.12.0-cp38-none-manylinux2014_x86_64.whl", hash = "sha256:452f0e37aa5bf3715021a321e7d49408b11984041e0fa0201dee9abc5accbe82"},
-    {file = "pyexiv2-2.12.0-cp38-none-win_amd64.whl", hash = "sha256:f5ea0c1b5472fc5e70defe754dea71c4109f5f1e147fa229286279211b5720e1"},
-    {file = "pyexiv2-2.12.0-cp39-none-macosx_12_0_x86_64.whl", hash = "sha256:a4081e7afdd0fb5c499a6a3797b8ab1acb7630557ce9b2f3a0c3837a20d35d06"},
-    {file = "pyexiv2-2.12.0-cp39-none-macosx_13_0_x86_64.whl", hash = "sha256:9c421140d0ef5047edd52085c5ef55cf3005ff628fb4520e623e3d3fc46a19f0"},
-    {file = "pyexiv2-2.12.0-cp39-none-manylinux2014_x86_64.whl", hash = "sha256:c07e1249349773891006d8868557f2eedbc89d0881a6d52ec019bd621144192c"},
-    {file = "pyexiv2-2.12.0-cp39-none-win_amd64.whl", hash = "sha256:5857a42db835f1a29df50afdeb377946b3b58ba3a268da2dd781e0daeaa16dfd"},
-]
-
-[[package]]
 name = "pygments"
 version = "2.18.0"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -1002,24 +880,6 @@ files = [
 
 [package.extras]
 windows-terminal = ["colorama (>=0.4.6)"]
-
-[[package]]
-name = "pymdown-extensions"
-version = "10.8.1"
-description = "Extension pack for Python Markdown."
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "pymdown_extensions-10.8.1-py3-none-any.whl", hash = "sha256:f938326115884f48c6059c67377c46cf631c733ef3629b6eed1349989d1b30cb"},
-    {file = "pymdown_extensions-10.8.1.tar.gz", hash = "sha256:3ab1db5c9e21728dabf75192d71471f8e50f216627e9a1fa9535ecb0231b9940"},
-]
-
-[package.dependencies]
-markdown = ">=3.6"
-pyyaml = "*"
-
-[package.extras]
-extra = ["pygments (>=2.12)"]
 
 [[package]]
 name = "pytest"
@@ -1146,13 +1006,13 @@ rpds-py = ">=0.7.0"
 
 [[package]]
 name = "requests"
-version = "2.32.2"
+version = "2.31.0"
 description = "Python HTTP for Humans."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.7"
 files = [
-    {file = "requests-2.32.2-py3-none-any.whl", hash = "sha256:fc06670dd0ed212426dfeb94fc1b983d917c4f9847c863f313c9dfaaffb7c23c"},
-    {file = "requests-2.32.2.tar.gz", hash = "sha256:dd951ff5ecf3e3b3aa26b40703ba77495dab41da839ae72ef3c8e5d8e2433289"},
+    {file = "requests-2.31.0-py3-none-any.whl", hash = "sha256:58cd2187c01e70e6e26505bca751777aa9f2ee0b7f4300988b709f44e013003f"},
+    {file = "requests-2.31.0.tar.gz", hash = "sha256:942c5a758f98d790eaed1a29cb6eefc7ffb0d1cf7af05c3d2791656dbd6ad1e1"},
 ]
 
 [package.dependencies]
@@ -1312,25 +1172,6 @@ files = [
     {file = "smmap-5.0.1-py3-none-any.whl", hash = "sha256:e6d8668fa5f93e706934a62d7b4db19c8d9eb8cf2adbb75ef1b675aa332b69da"},
     {file = "smmap-5.0.1.tar.gz", hash = "sha256:dceeb6c0028fdb6734471eb07c0cd2aae706ccaecab45965ee83f11c8d3b1f62"},
 ]
-
-[[package]]
-name = "sstc-utils"
-version = "0.1.1"
-description = ""
-optional = false
-python-versions = "<4.0,>=3.11"
-files = [
-    {file = "sstc_utils-0.1.1-py3-none-any.whl", hash = "sha256:5017ee830bb6924c447eb915d9bdc83b44b701737fafaab34bce79b97b4f90d3"},
-    {file = "sstc_utils-0.1.1.tar.gz", hash = "sha256:82a953165ebb8305594a91cd719b14df1deb80e8d146173e7db36aa07554b69e"},
-]
-
-[package.dependencies]
-mkdocs = ">=1.5.3,<2.0.0"
-mkdocs-rtd-dropdown = ">=1.0.2,<2.0.0"
-mkdocstrings-python = "*"
-pyexiv2 = ">=2.9.0,<3.0.0"
-pytest = ">=7.4.3,<8.0.0"
-pyyaml = ">=6.0.1,<7.0.0"
 
 [[package]]
 name = "streamlit"
@@ -1524,4 +1365,4 @@ watchmedo = ["PyYAML (>=3.10)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11.8"
-content-hash = "c34fb6d9e32880c6f80df418064b02190fb2c977a3296e2ca9ee29333c6402e1"
+content-hash = "625dd67753f5dcb8e649bf92914ce79f52ba71821f6bc7bcd49bddbba544caf0"
