@@ -21,6 +21,7 @@ bgsio = "^0.1.4"
 sstc_utils = "*"
 scipy = "*"
 matplotlib = "*"
+plotly = "*"
 
 
 [build-system]
