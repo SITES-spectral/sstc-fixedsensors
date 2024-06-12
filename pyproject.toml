@@ -4,7 +4,7 @@
 
 [tool.poetry]
 name = "sstc-fixedsensors"
-version = "0.2.0"
+version = "0.2.1"
 description = ""
 authors = ["Jobelund <124563223+jobelund@users.noreply.github.com>"]
 readme = "README.md"
